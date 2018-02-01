@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Hevelop_LestifpcAsynccache>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Aoe_AsyncCache/>
+                <Lesti_Fpc/>
+            </depends>
+        </Hevelop_LestifpcAsynccache>
+    </modules>
+</config>

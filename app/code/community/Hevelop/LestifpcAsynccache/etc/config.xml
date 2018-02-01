@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Hevelop_LestifpcAsynccache>
+            <version>0.0.1</version>
+        </Hevelop_LestifpcAsynccache>
+    </modules>
+    <global>
+        <models>
+            <lestifpcasynccache>
+                <class>Hevelop_LestifpcAsynccache_Model</class>
+            </lestifpcasynccache>
+            <aoeasynccache>
+                <rewrite>
+                    <cleaner>Hevelop_LestifpcAsynccache_Model_AsyncCache_Cleaner</cleaner>
+                </rewrite>
+            </aoeasynccache>
+        </models>
+        <events>
+            <application_clean_cache>
+                <observers>
+                    <hevelop_lestifpcasynccache_clean_cache>
+                        <class>lestifpcasynccache/observer</class>
+                        <method>addLestifpcTags</method>
+                    </hevelop_lestifpcasynccache_clean_cache>
+                </observers>
+            </application_clean_cache>
+        </events>
+    </global>
+</config>

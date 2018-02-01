@@ -1,0 +1,6 @@
+{
+    "name": "hevelop/lestifpc-asynccache",
+    "type": "magento-module",
+    "description": "Hevelop module to compatibilize Aoe_Asynccache with Lesti_Fpc",
+    "license": "Open Source"
+}

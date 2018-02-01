@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package>
+    <name>Hevelop_LestifpcAsynccache</name>
+    <version>0.0.1</version>
+    <stability>stable</stability>
+    <license>AGPL</license>
+    <channel>community</channel>
+    <summary>Hevelop module to compatibilize Aoe_Asynccache with Lesti_Fpc</summary>
+    <authors><author><name>Alessandro Pagnin</name><company>Hevelop</company><email>alessandro@hevelop.com</email></author></authors>
+</package>
