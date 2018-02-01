@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Hevelop_LestifpcAsynccache>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </Hevelop_LestifpcAsynccache>
     </modules>
     <global>
@@ -25,6 +25,42 @@
                     </hevelop_lestifpcasynccache_clean_cache>
                 </observers>
             </application_clean_cache>
+            <aoeasynccache_processqueue_postprocessjobcollection>
+                <observers>
+                    <lestifpcasynccache>
+                        <class>lestifpcasynccache/observer</class>
+                        <method>postProcessJobCollection</method>
+                    </lestifpcasynccache>
+                </observers>
+            </aoeasynccache_processqueue_postprocessjobcollection>
+            <catalog_product_save_after>
+                <observers>
+                    <fpc_catalog_product_save_after>
+                        <type>disabled</type>
+                    </fpc_catalog_product_save_after>
+                </observers>
+            </catalog_product_save_after>
+            <catalog_category_save_after>
+                <observers>
+                    <fpc_catalog_category_save_after>
+                        <type>disabled</type>
+                    </fpc_catalog_category_save_after>
+                </observers>
+            </catalog_category_save_after>
+            <cms_page_save_after>
+                <observers>
+                    <fpc_cms_page_save_after>
+                        <type>disabled</type>
+                    </fpc_cms_page_save_after>
+                </observers>
+            </cms_page_save_after>
+            <cataloginventory_stock_item_save_after>
+                <observers>
+                    <fpc_cataloginventory_stock_item_save_after>
+                        <type>disabled</type>
+                    </fpc_cataloginventory_stock_item_save_after>
+                </observers>
+            </cataloginventory_stock_item_save_after>
         </events>
     </global>
 </config>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Redis Management Module
+ *
+ * @category  Steverobbins
+ * @package   Steverobbins_Redismanager
+ * @author    Steve Robbins <steven.j.robbins@gmail.com>
+ * @copyright 2014 Steve Robbins
+ * @license   http://creativecommons.org/licenses/by/3.0/deed.en_US Creative Commons Attribution 3.0 Unported License
+ * @link      https://github.com/steverobbins/Magento-Redismanager
+ */
+-->
+<config>
+    <sections>
+        <redismanager translate="label" module="redismanager">
+            <groups>
+                <asynccache translate="label">
+                    <label>Additional settings for AOE AsyncCache</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <config translate="label comment">
+                            <label>Additional CONFIG services</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Additional services to send commands for CONFIG cache type. Insert service name separated with "::", like in "Service 1::Service 2".</comment>
+                        </config>
+                        <fpc translate="label comment">
+                            <label>Additional FPC services</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Additional services to send commands for FPC cache type. Insert service name separated with "::", like in "Service 1::Service 2".</comment>
+                        </fpc>
+                    </fields>
+                </asynccache>
+            </groups>
+        </redismanager>
+    </sections>
+</config>

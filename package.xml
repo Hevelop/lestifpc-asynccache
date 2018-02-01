@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Hevelop_LestifpcAsynccache</name>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <stability>stable</stability>
     <license>AGPL</license>
     <channel>community</channel>
