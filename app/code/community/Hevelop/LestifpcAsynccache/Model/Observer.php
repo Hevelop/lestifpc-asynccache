@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Hevelop_LestifpcAsynccache_Model_Observer
+ */
 class Hevelop_LestifpcAsynccache_Model_Observer
 {
     const CACHE_TYPE_CONFIG = 'config';
@@ -101,6 +104,32 @@ class Hevelop_LestifpcAsynccache_Model_Observer
                             // Table might not be created yet. Just go on without returning...
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * To cms page it also has to add the tag with the identifier
+     * @param $observer
+     */
+    public function cmsPageSaveAfter($observer)
+    {
+        $useQueue = !Mage::registry('disableasynccache');
+        if ($useQueue) {
+            $asyncCache = Mage::getModel('aoeasynccache/asynccache');
+            if ($asyncCache !== false) {
+                $page = $observer->getEvent()->getObject();
+                $asyncCache->setTstamp(time())
+                    ->setMode(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG)
+                    ->setTags(sha1('cms_' . $page->getIdentifier()))
+                    ->setCacheType(self::CACHE_TYPE_FPC)
+                    ->setStatus(Aoe_AsyncCache_Model_Asynccache::STATUS_PENDING);
+                try {
+                    $asyncCache->save();
+                    return true;
+                } catch (Exception $e) {
+                    // Table might not be created yet. Just go on without returning...
                 }
             }
         }

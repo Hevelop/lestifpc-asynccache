@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Hevelop_LestifpcAsynccache>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
         </Hevelop_LestifpcAsynccache>
     </modules>
     <global>
@@ -52,6 +52,10 @@
                     <fpc_cms_page_save_after>
                         <type>disabled</type>
                     </fpc_cms_page_save_after>
+                    <lestifpcasynccache_cms_page_save_after>
+                        <class>lestifpcasynccache/observer</class>
+                        <method>cmsPageSaveAfter</method>
+                    </lestifpcasynccache_cms_page_save_after>
                 </observers>
             </cms_page_save_after>
             <cataloginventory_stock_item_save_after>
