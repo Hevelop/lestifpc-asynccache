@@ -58,7 +58,6 @@ class Hevelop_LestifpcAsynccache_Model_Observer
         $servicesData = $_helper->getServices();
         foreach ($servicesData as $serviceData) {
             $cacheConfigName = $cacheType == 'config' ? 'cache' : $cacheType;
-            $cacheClass = $cacheType == 'fpc' ? 'Lesti_Fpc_Model_Fpc' : 'Mage_Core_Model_Cache';
             $serviceToFlush = array_search($serviceData['name'], $this->getRedisServicesSelected($cacheType));
             if ($serviceToFlush === false) {
                 continue;
@@ -68,7 +67,7 @@ class Hevelop_LestifpcAsynccache_Model_Observer
             if (!empty($prefixes[$serviceToFlush])) {
                 $prefix = $prefixes[$serviceToFlush];
             }
-            $service = new $cacheClass([
+            $service = new Mage_Core_Model_Cache([
                 'id_prefix' => $prefix,
                 'backend' => (string) Mage::getConfig()->getNode('global/' . $cacheConfigName . '/backend'),
                 'backend_options' => [
@@ -207,7 +206,7 @@ class Hevelop_LestifpcAsynccache_Model_Observer
             if (in_array($job->getCacheType(), $this->getAllowedConfigType())) {
                 try {
                     $tags = $job->getTags();
-                    if (in_array('FPC', $tags) || in_array('cms_block', 'BLOCK_HTML')) {
+                    if (in_array('FPC', $tags) || in_array('BLOCK_HTML', $tags)) {
                         $tags = [];
                     }
                     $services = $this->getRedisServices($job->getCacheType());
