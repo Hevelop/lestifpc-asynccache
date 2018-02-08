@@ -28,6 +28,16 @@ class Hevelop_LestifpcAsynccache_Model_Observer
         return explode('::', Mage::getStoreConfig(self::CONFIG_CACHE_SERVICES_ROOT . $cacheType));
     }
 
+    /**
+     * Returns the names of the services selected by backend
+     * @param $cacheType
+     * @return array
+     */
+    public function getRedisServicesSelectedPrefix($cacheType)
+    {
+        return explode('::', Mage::getStoreConfig(self::CONFIG_CACHE_SERVICES_ROOT . $cacheType . '_prefix'));
+    }
+
     public function getRedisServices($cacheType)
     {
         if (!in_array($cacheType, $this->getAllowedConfigType())) {
@@ -48,19 +58,27 @@ class Hevelop_LestifpcAsynccache_Model_Observer
         $servicesData = $_helper->getServices();
         foreach ($servicesData as $serviceData) {
             $cacheConfigName = $cacheType == 'config' ? 'cache' : $cacheType;
-            $service = new Mage_Core_Model_Cache([
-                'id_prefix' => (string) Mage::getConfig()->getNode('global/' . $cacheConfigName . '/prefix'),
+            $cacheClass = $cacheType == 'fpc' ? 'Lesti_Fpc_Model_Fpc' : 'Mage_Core_Model_Cache';
+            $serviceToFlush = array_search($serviceData['name'], $this->getRedisServicesSelected($cacheType));
+            if ($serviceToFlush === false) {
+                continue;
+            }
+            $prefixes = $this->getRedisServicesSelectedPrefix($cacheType);
+            $prefix = (string) Mage::getConfig()->getNode('global/' . $cacheConfigName . '/prefix');
+            if (!empty($prefixes[$serviceToFlush])) {
+                $prefix = $prefixes[$serviceToFlush];
+            }
+            $service = new $cacheClass([
+                'id_prefix' => $prefix,
                 'backend' => (string) Mage::getConfig()->getNode('global/' . $cacheConfigName . '/backend'),
                 'backend_options' => [
                     'port' => $serviceData['port'],
                     'database' => $serviceData['db'],
                     'password' => $serviceData['password'],
-                    'server' => $serviceData['host'],
+                    'server' => $serviceData['host']
                 ]
             ]);
-            if (in_array($serviceData['name'], $this->getRedisServicesSelected($cacheType))) {
-                $this->_allBackends[$cacheType][] = $service;
-            }
+            $this->_allBackends[$cacheType][] = $service;
         }
         return $this->_allBackends[$cacheType];
     }
@@ -70,6 +88,8 @@ class Hevelop_LestifpcAsynccache_Model_Observer
         $tag = false;
         if (strpos($original_tag, 'cms_page_') !== false) {
             $tag = sha1(str_replace('cms_page', 'cms', $original_tag));
+        } else if (strpos($original_tag, 'cms_block_') !== false) {
+            $tag = sha1(str_replace('cms_block', 'cmsblock', $original_tag));
         } else if (strpos($original_tag, 'catalog_product_') !== false) {
             $tag = sha1(str_replace('catalog_product', 'product', $original_tag));
         } else if (strpos($original_tag, 'catalog_category_') !== false) {
@@ -136,6 +156,41 @@ class Hevelop_LestifpcAsynccache_Model_Observer
     }
 
     /**
+     * On mass refresh also add lesti cache tag to invalidate all pages
+     * @param $observer
+     */
+    public function cacheMassRefresh($observer)
+    {
+        $types = Mage::app()->getRequest()->getParam('types');
+        $typesTags = [
+            'fpc' => [sha1('cms'), 'FPC'],
+            'block_html' => [sha1('cmsblock'), 'BLOCK_HTML']
+        ];
+        $useQueue = !Mage::registry('disableasynccache');
+        if ($useQueue) {
+            foreach ($types as $type) {
+                if (!isset($typesTags[$type])) {
+                    continue;
+                }
+                $asyncCache = Mage::getModel('aoeasynccache/asynccache');
+                if ($asyncCache !== false) {
+                    $asyncCache->setTstamp(time())
+                        ->setMode(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG)
+                        ->setTags(implode(',', $typesTags[$type]))
+                        ->setCacheType(self::CACHE_TYPE_FPC)
+                        ->setStatus(Aoe_AsyncCache_Model_Asynccache::STATUS_PENDING);
+                    try {
+                        $asyncCache->save();
+                        return true;
+                    } catch (Exception $e) {
+                        // Table might not be created yet. Just go on without returning...
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * If thereis redismanager, it also send the tags to all the cache instances.
      *
      * @param Mage_Core_Model_Observer|Varien_Event_Observer $observer
@@ -152,6 +207,9 @@ class Hevelop_LestifpcAsynccache_Model_Observer
             if (in_array($job->getCacheType(), $this->getAllowedConfigType())) {
                 try {
                     $tags = $job->getTags();
+                    if (in_array('FPC', $tags) || in_array('cms_block', 'BLOCK_HTML')) {
+                        $tags = [];
+                    }
                     $services = $this->getRedisServices($job->getCacheType());
                     if (!empty($services)) {
                         foreach ($services as $service) {

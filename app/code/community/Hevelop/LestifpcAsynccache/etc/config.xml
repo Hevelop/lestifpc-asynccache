@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Hevelop_LestifpcAsynccache>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </Hevelop_LestifpcAsynccache>
     </modules>
     <global>
@@ -67,4 +67,19 @@
             </cataloginventory_stock_item_save_after>
         </events>
     </global>
+    <adminhtml>
+        <events>
+            <controller_action_predispatch_adminhtml_cache_massRefresh>
+                <observers>
+                    <fpc_controller_action_predispatch_adminhtml_cache_massRefresh>
+                        <type>disabled</type>
+                    </fpc_controller_action_predispatch_adminhtml_cache_massRefresh>
+                    <lestifpcasynccache_adminhtml_cache_massRefresh>
+                        <class>lestifpcasynccache/observer</class>
+                        <method>cacheMassRefresh</method>
+                    </lestifpcasynccache_adminhtml_cache_massRefresh>
+                </observers>
+            </controller_action_predispatch_adminhtml_cache_massRefresh>
+        </events>
+    </adminhtml>
 </config>

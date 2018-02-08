@@ -32,6 +32,15 @@
                             <show_in_store>0</show_in_store>
                             <comment>Additional services to send commands for CONFIG cache type. Insert service name separated with "::", like in "Service 1::Service 2".</comment>
                         </config>
+                        <config_prefix translate="label comment">
+                            <label>Additional CONFIG prefix</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Additional prefix to use with additional services. Insert prefix separated with "::", like in "CACHE_::ADMIN_".</comment>
+                        </config_prefix>
                         <fpc translate="label comment">
                             <label>Additional FPC services</label>
                             <frontend_type>text</frontend_type>
@@ -41,6 +50,15 @@
                             <show_in_store>0</show_in_store>
                             <comment>Additional services to send commands for FPC cache type. Insert service name separated with "::", like in "Service 1::Service 2".</comment>
                         </fpc>
+                        <fpc_prefix translate="label comment">
+                            <label>Additional FPC prefix</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Additional prefix to use with FPC cache type. Insert prefix separated with "::", like in "CACHE_::ADMIN_".</comment>
+                        </fpc_prefix>
                     </fields>
                 </asynccache>
             </groups>
