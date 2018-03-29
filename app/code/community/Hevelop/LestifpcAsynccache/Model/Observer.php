@@ -155,6 +155,34 @@ class Hevelop_LestifpcAsynccache_Model_Observer
     }
 
     /**
+     * To cms page it also has to add the tag with the identifier
+     * @param $observer
+     */
+    public function stockItemSaveAfter($observer)
+    {
+        $useQueue = !Mage::registry('disableasynccache');
+        if ($useQueue) {
+            $asyncCache = Mage::getModel('aoeasynccache/asynccache');
+            if ($asyncCache !== false) {
+                $item = $observer->getEvent()->getItem();
+                if ($item->getStockStatusChangedAuto()) {
+                    $asyncCache->setTstamp(time())
+                        ->setMode(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG)
+                        ->setTags(sha1('product_' . $item->getProductId()))
+                        ->setCacheType(self::CACHE_TYPE_FPC)
+                        ->setStatus(Aoe_AsyncCache_Model_Asynccache::STATUS_PENDING);
+                    try {
+                        $asyncCache->save();
+                        return true;
+                    } catch (Exception $e) {
+                        // Table might not be created yet. Just go on without returning...
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * On mass refresh also add lesti cache tag to invalidate all pages
      * @param $observer
      */

@@ -63,6 +63,10 @@
                     <fpc_cataloginventory_stock_item_save_after>
                         <type>disabled</type>
                     </fpc_cataloginventory_stock_item_save_after>
+                    <lestifpcasynccache_stock_item_save_after>
+                        <class>lestifpcasynccache/observer</class>
+                        <method>stockItemSaveAfter</method>
+                    </lestifpcasynccache_stock_item_save_after>
                 </observers>
             </cataloginventory_stock_item_save_after>
         </events>
