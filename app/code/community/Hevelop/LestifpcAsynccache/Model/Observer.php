@@ -86,13 +86,13 @@ class Hevelop_LestifpcAsynccache_Model_Observer
     {
         $tag = false;
         if (strpos($original_tag, 'cms_page_') !== false) {
-            $tag = sha1(str_replace('cms_page', 'cms', $original_tag));
+            $tag = strtoupper(sha1(str_replace('cms_page', 'cms', $original_tag)));
         } else if (strpos($original_tag, 'cms_block_') !== false) {
-            $tag = sha1(str_replace('cms_block', 'cmsblock', $original_tag));
+            $tag = strtoupper(sha1(str_replace('cms_block', 'cmsblock', $original_tag)));
         } else if (strpos($original_tag, 'catalog_product_') !== false) {
-            $tag = sha1(str_replace('catalog_product', 'product', $original_tag));
+            $tag = strtoupper(sha1(str_replace('catalog_product', 'product', $original_tag)));
         } else if (strpos($original_tag, 'catalog_category_') !== false) {
-            $tag = sha1(str_replace('catalog_category', 'category', $original_tag));
+            $tag = strtoupper(sha1(str_replace('catalog_category', 'category', $original_tag)));
         }
         return $tag;
     }
@@ -141,7 +141,7 @@ class Hevelop_LestifpcAsynccache_Model_Observer
                 $page = $observer->getEvent()->getObject();
                 $asyncCache->setTstamp(time())
                     ->setMode(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG)
-                    ->setTags(sha1('cms_' . $page->getIdentifier()))
+                    ->setTags(strtoupper(sha1('cms_' . $page->getIdentifier())))
                     ->setCacheType(self::CACHE_TYPE_FPC)
                     ->setStatus(Aoe_AsyncCache_Model_Asynccache::STATUS_PENDING);
                 try {
@@ -168,7 +168,7 @@ class Hevelop_LestifpcAsynccache_Model_Observer
                 if ($item->getStockStatusChangedAuto()) {
                     $asyncCache->setTstamp(time())
                         ->setMode(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG)
-                        ->setTags(sha1('product_' . $item->getProductId()))
+                        ->setTags(strtoupper(sha1('product_' . $item->getProductId())))
                         ->setCacheType(self::CACHE_TYPE_FPC)
                         ->setStatus(Aoe_AsyncCache_Model_Asynccache::STATUS_PENDING);
                     try {
@@ -190,8 +190,8 @@ class Hevelop_LestifpcAsynccache_Model_Observer
     {
         $types = Mage::app()->getRequest()->getParam('types');
         $typesTags = [
-            'fpc' => [sha1('cms'), 'FPC'],
-            'block_html' => [sha1('cmsblock'), 'BLOCK_HTML']
+            'fpc' => [strtoupper(sha1('cms')), 'FPC'],
+            'block_html' => [strtoupper(sha1('cmsblock')), 'BLOCK_HTML']
         ];
         $useQueue = !Mage::registry('disableasynccache');
         if ($useQueue) {
